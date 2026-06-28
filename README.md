@@ -1,7 +1,7 @@
 # keystone
 
 Accuracy-first clearing margin & HVaR engine. RepoClear today, EquityClear-ready.
-Flat-file (CSV) data now; Snowflake later behind the same ports.
+Flat-file (CSV) data now; Snowflake later behind the same ports. Functionality will also extend to quant team's needs for reporting and analysis.
 
 ## What it does
 - **Daily margin run**: full-revaluation HVaR + composable add-ons (e.g. APC
@@ -29,6 +29,46 @@ mypy src && ruff check src
 Hexagonal (ports & adapters). See `.claude/skills/keystone-architecture/SKILL.md`
 for the full conventions and `CLAUDE.md` for the working guide. Extension recipes
 in `docs/`.
+
+Data flows top-to-bottom: thin orchestrators drive one shared calculation core,
+which reaches data only through ports. Asset pricers and the data layer are the
+two extension seams (EquityClear adds pricers, Snowflake adds an adapter — the
+core is untouched in both cases).
+
+```
+                    ORCHESTRATORS (thin)
+        ┌───────────────────┐      ┌────────────────────────┐
+        │  Daily Margin Run  │      │  HVaR Backtest (10yr)  │
+        │  one date · addons │      │  N dates × 2500 scen.  │
+        │  · reporting       │      │  streamed by date      │
+        └─────────┬──────────┘      └───────────┬────────────┘
+                  │       both drive the same    │
+                  └───────────────┬──────────────┘
+                                  ▼
+        ┌─────────────────────────────────────────────────────┐
+        │           CALCULATION CORE  (asset-agnostic, PURE)   │
+        │  scenario_engine  · portfolio P&L vector / scenario  │
+        │  reval modes      · FullReval (ref) | DeltaGamma     │
+        │  sensitivities    · PV01 / PV02 (bump full-reval)    │
+        │  risk + add-ons   · HVaR/ES · APC buffer (composable)│
+        └──────┬───────────────────────────────────┬──────────┘
+               │ Pricer protocol (registry)         │ reads via ports
+        ┌──────▼───────────┐             ┌──────────▼───────────────┐
+        │ ASSET PRICERS     │            │  DATA LAYER (ports)        │
+        │ repo (now)        │            │  InstrumentSource          │
+        │ equity (later)    │            │  MarketDataSource          │
+        │  ↑ vectorised     │            │  CalendarSource            │
+        │  pnl_vector       │            │      ▲ implemented by      │
+        └───────────────────┘            │  ┌───┴──────────────────┐ │
+                                         │  │ ADAPTERS              │ │
+                                         │  │ flat-file/CSV (now)   │ │
+        ┌────────────────────────────┐  │  │ Snowflake (later)     │ │
+        │  RECONCILIATION (gate)      │  │  └───────────────────────┘ │
+        │  golden-master vs prod      │  └────────────────────────────┘
+        │  delta-gamma tail error     │
+        └────────────────────────────┘   upstream: MarketDataCleaning
+                                          → versioned, checksummed snapshots
+```
 
 ## Layout
 ```
