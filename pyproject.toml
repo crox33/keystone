@@ -1,0 +1,33 @@
+[project]
+name = "keystone"
+version = "0.1.0"
+description = "Asset-agnostic clearing margin & HVaR engine (RepoClear -> EquityClear)"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "polars>=1.0", "pydantic>=2.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.mypy]
+strict = true
+disallow_any_generics = true
+warn_return_any = true
+no_implicit_optional = true
+plugins = ["pydantic.mypy"]
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["keystone.engine.*", "keystone.reconciliation.*"]
+# numpy-heavy modules: allow pragmatic Any at the numpy boundary only
+disallow_any_explicit = false
+
+[tool.ruff]
+line-length = 95
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RET"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
