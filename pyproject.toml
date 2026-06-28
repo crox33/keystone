@@ -1,9 +1,18 @@
 [project]
 name = "keystone"
 version = "0.1.0"
-description = "Asset-agnostic clearing margin & HVaR engine (RepoClear -> EquityClear)"
+description = "Asset-agnostic clearing margin & HVaR engine (RepoClear / EquityClear / CaLM)"
 requires-python = ">=3.11"
+# Runtime deps stay MINIMAL by policy. Justify every addition; prefer the stdlib.
 dependencies = ["numpy>=1.26", "polars>=1.0", "pydantic>=2.0"]
+
+[project.optional-dependencies]
+# Dev-only tools — never imported by src/. Install with: pip install -e ".[dev]"
+dev = ["ruff", "mypy", "pytest", "hypothesis"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]

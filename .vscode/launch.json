@@ -1,0 +1,61 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run current file",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}${pathSeparator}${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Monthly run (demo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/periodic/monthly_run.py",
+      "args": [
+        "--as-of",
+        "2024-01-31"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}${pathSeparator}${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Quarterly run (demo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/periodic/quarterly_run.py",
+      "args": [
+        "--as-of",
+        "2024-03-31"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}${pathSeparator}${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Yearly run (demo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/periodic/yearly_run.py",
+      "args": [
+        "--as-of",
+        "2024-12-31"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}${pathSeparator}${workspaceFolder}/src"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="yearly_run" type="PythonConfigurationType" factoryName="Python">
+    <module name="keystone" />
+    <option name="ENV_FILES" value="" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
+    <option name="PARENT_ENVS" value="true" />
+    <option name="SDK_HOME" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="true" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/periodic/yearly_run.py" />
+    <option name="PARAMETERS" value="--as-of 2024-12-31" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <method v="2" />
+  </configuration>
+</component>
