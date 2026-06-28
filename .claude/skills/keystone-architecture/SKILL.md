@@ -5,6 +5,12 @@ description: Architectural conventions and invariants for the keystone clearing-
 
 # keystone architecture conventions
 
+This repo is the immutable, extensible **boilerplate** for three LSEG clearing
+services on one shared core — **RepoClear**, **EquityClear**, **CaLM**
+(Collateral & Liquidity Management). Primary users are quant risk analysts and
+managers. New markets, models, and additional margins must slot in at the seams
+without forking the core.
+
 Priority order, non-negotiable: **accuracy > extensibility-at-seams >
 readability > bounded memory**. Speed is achieved via vectorisation + streaming,
 not by sacrificing the above.
@@ -37,11 +43,22 @@ diverge.
   `price` (single reference PV) and `pnl_vector` (vectorised across scenarios).
 - New margin add-on = subclass `MarginAddon` (ABC), implement `increment`.
 - New data source = implement the relevant port; drop it in `adapters/`.
+- New service (RepoClear / EquityClear / CaLM) = compose the same core via
+  orchestration + adapters; do not fork engine/ or domain/.
+- Reporting/analysis (e.g. monthly sensitivities, procyclicality — IM change over
+  the trailing 18 months) consumes engine outputs; it is a thin layer over the
+  core, never new pricing logic.
+
+## Data stack
+- Dataframes = **Polars**; storage/interchange = **Parquet + Arrow**. Do NOT use
+  pandas. Raw **numpy** arrays are fine for hot numeric paths.
+- Flat-file focused now; Snowflake later behind the same ports.
 
 ## Vectorisation rule
 `pnl_vector` MUST price all scenarios in numpy array ops — never a Python loop
 over the (e.g. 2500) scenarios. The engine sums instrument vectors; do not loop
-scenarios at the engine level either.
+scenarios at the engine level either. Scale with vectorisation +
+multiprocessing, never Python loops.
 
 ## Reval modes
 - `FullReval` is the reference and what the margin run uses.

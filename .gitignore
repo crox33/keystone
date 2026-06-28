@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+*.egg-info/
+build/
+dist/
+.DS_Store
+
+# script outputs
+output/
+
+# playground is scratch — keep only the example + readme
+scripts/playground/*
+!scripts/playground/__init__.py
+!scripts/playground/example_idea.py
+!scripts/playground/README.md
+
+# IDE: share run configs, ignore per-user workspace state
+/.idea/*
+!/.idea/runConfigurations/

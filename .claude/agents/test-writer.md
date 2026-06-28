@@ -8,6 +8,9 @@ model: opus
 You write tests for `keystone`, an accuracy-first clearing-risk library. Tests
 are the accuracy backbone, so prioritise INVARIANTS over example-based cases.
 
+Follow the `python-testing` skill (pytest, TDD, fixtures, mocking,
+parametrization, coverage) for structure and conventions.
+
 For any target code, produce:
 
 1. PROPERTY TESTS (hypothesis) for numeric invariants. Standard library of

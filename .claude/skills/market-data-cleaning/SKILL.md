@@ -31,6 +31,8 @@ cleaning makes every margin number reproducible from a named data version.
    why).
 
 ## Hard rules
+- Every detection/treatment decision is **quantifiable** — driven by an explicit
+  statistical test with a documented threshold, never ad hoc judgement.
 - Robust statistics (median/MAD) over mean/std for detection — risk data has fat
   tails and a single outlier poisons mean/std.
 - Cleaning is deterministic given (raw input, parameter set, version). Same
@@ -42,4 +44,9 @@ cleaning makes every margin number reproducible from a named data version.
 
 ## Interface to the core
 The core reads snapshots through a `MarketDataSource` port keyed by data version.
-The engine takes a version id; it never sees raw data or cleaning code.
+The engine takes a version id; it never sees raw data or cleaning code. Emit
+snapshots as Parquet (Polars/Arrow), never pandas.
+
+Versioned, checksummed snapshots are also what make periodic reporting (monthly
+sensitivities, procyclicality of IM) reproducible: each report cites the data
+version it ran on.
